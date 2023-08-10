@@ -45,6 +45,9 @@ def rename_and_move():
     print("Downloads Path:", downloads_path)
     rename_exported_files(downloads_path, model_names)
 
+    time.sleep(300)
+    driver.quit()
+
 if __name__ == '__main__':
     # Run the export() function when the models finish processing to export the in GLTF
     rename_and_move()

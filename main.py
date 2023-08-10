@@ -53,6 +53,7 @@ def process_folder(driver, folder_path):
 def rename_models_to_folder_name(driver, folder_name):
     # Find the input field corresponding to the next 3D model name.
     # Using the explicit wait ensures that we get the next available name input.
+    time.sleep(0.5)
     model_name_element = WebDriverWait(driver, 20).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, 'input[name="itemName"]')))
 

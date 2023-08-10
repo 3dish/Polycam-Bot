@@ -27,6 +27,7 @@ def export():
         # Click Start Download
         WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, ".css-1wrlxiy"))).click()
+        time.sleep(0.5)
         # Close
         WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, ".css-1ghaoiw svg"))).click()
