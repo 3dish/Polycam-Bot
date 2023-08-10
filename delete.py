@@ -6,7 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-def export():
+def delete():
     driver = webdriver.Chrome()
     driver.get("https://poly.cam")
     WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".css-12ll7o1")))
@@ -16,26 +16,18 @@ def export():
     for button in export_buttons:
         # Click on the Model 3 dots
         driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", button)
-        time.sleep(3)
+        time.sleep(1)
         button.click()
-        # Click Export
+        # Click delete
         WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, ".css-8y1flk:nth-child(3)"))).click()
-        # Select GLTF format
+            EC.element_to_be_clickable((By.CSS_SELECTOR, ".css-8y1flk:nth-child(5) .css-1vjvbvp"))).click()
+        # Select delete in the popup
         WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable(
-                (By.CSS_SELECTOR, ".css-1rr4qq7:nth-child(1) > .css-1u07a6n:nth-child(3)"))).click()
-        # Click Start Download
-        WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, ".css-1wrlxiy"))).click()
+                (By.CSS_SELECTOR, ".css-ytva8q:nth-child(2)"))).click()
         time.sleep(0.5)
-        # Close
-        WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, ".css-1ghaoiw svg"))).click()
 
-        # Click outside the popup to exit
-        driver.execute_script("document.elementFromPoint(1, 1).click();")
-        print("Export")
+        print("Delete")
 
     time.sleep(200)
     driver.quit()
@@ -43,4 +35,4 @@ def export():
 
 if __name__ == '__main__':
     # Run the export() function when the models finish processing to export the in GLTF
-    export()
+    delete()
