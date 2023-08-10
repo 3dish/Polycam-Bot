@@ -1,6 +1,7 @@
 import os
 import time
 import shutil
+import argparse
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -51,7 +52,7 @@ def rename_exported_files(exported_folder_path, model_names):
         print(f"Renaming: {old_path} to {new_path}")
         os.rename(old_path, new_path)
 
-def rename_and_move():
+def rename_and_move(destination_folder):
     # Your Selenium driver setup
     driver = webdriver.Chrome()
     driver.get("https://poly.cam")
@@ -65,7 +66,7 @@ def rename_and_move():
     rename_exported_files(downloads_path, model_names)
 
     # Define your destination folder path
-    destination_folder = "G:/Shared drives/Business Operations/CodeAutomations/PolycamBot/RestaurantTest/Raw"  # Replace with the path where you want to move the files
+    #destination_folder = "G:/Shared drives/Business Operations/CodeAutomations/PolycamBot/RestaurantTest/Raw"  # Replace with the path where you want to move the files
     renamed_files = [name + ".glb" for name in model_names]
     move_files_to_directory(downloads_path, destination_folder, renamed_files)
 
@@ -73,5 +74,8 @@ def rename_and_move():
     driver.quit()
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="Rename and move files from PolyCam")
+    parser.add_argument("destination_folder", help="Path to the destination folder where the files should be moved")
+    args = parser.parse_args()
     # Run the export() function when the models finish processing to export the in GLTF
-    rename_and_move()
+    rename_and_move(args.destination_folder)
