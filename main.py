@@ -1,5 +1,6 @@
 import os
 import time
+import argparse
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -60,8 +61,8 @@ def rename_models_to_folder_name(driver, folder_name):
     model_name_element.clear()  # Clear current name
     model_name_element.send_keys(folder_name)  # Input the folder na
     time.sleep(0.5)
-def main():
-    root_folder = "G:/Shared drives/Business Operations/CodeAutomations/PolycamBot/RestaurantTest/Photos"
+def main(root_folder):
+    #root_folder = "G:/Shared drives/Business Operations/CodeAutomations/PolycamBot/RestaurantTest/Photos"
     subfolders = [os.path.join(root_folder, d) for d in os.listdir(root_folder) if
                   os.path.isdir(os.path.join(root_folder, d))]
 
@@ -84,4 +85,7 @@ def main():
 
 if __name__ == '__main__':
     #Run the main() function
-    main()
+    parser = argparse.ArgumentParser(description="Upload files to PolyCam")
+    parser.add_argument("photos_folder", help="Path to the Photos folder where the files should be imported")
+    args = parser.parse_args()
+    main(args.photos_folder)
