@@ -70,12 +70,18 @@ def process_folder(driver, folder_path):
     time.sleep(2)
     
     try:
-        # Click "Upload & Process" button
+        # Click "Upload & Process" button using the full selector you provided
         upload_button = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "button.SelectOptions_btn__aM4on")))
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "body > div:nth-child(50) > div > dialog > div > div.styles_content__GGCD8 > div.styles_container__9wrMQ.styles_y__eiMV9.styles_content__Kkmae > div > div > div.SelectOptions_footer__4gI9c > button.styles_action__Z2Fso.styles_l__vHx1i.styles_rect__lTWI7.styles_l-pad__GSKF9.SelectOptions_btn__aM4on")))
         print("Upload & Process button found! Clicking...")
         upload_button.click()
         print("Upload & Process button clicked!")
+        
+        # Wait for upload to complete (wait for the dialog to disappear)
+        print("Waiting for upload to complete...")
+        WebDriverWait(driver, 300).until(EC.invisibility_of_element_located((By.CSS_SELECTOR, "body > div:nth-child(50) > div > dialog")))
+        print("Upload completed!")
+        
     except Exception as e:
         print(f"Error clicking Upload & Process button: {e}")
         print("Let me try to find the button by text...")
