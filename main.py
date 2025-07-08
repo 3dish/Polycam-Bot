@@ -30,27 +30,65 @@ def process_folder(driver, folder_path):
     # Create a single string with all image paths separated by newlines
     files_to_upload = '\n'.join(image_files)
     # portal-target > div > div.css-5d0rkm
-    WebDriverWait(driver, 300).until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".css-5d0rkm")))
-    WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".css-12ll7o1"))).click()
-    WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, ".css-pu23zc:nth-child(1) .css-ouqbe"))).click()
+    button = WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#__next > div.WorkspaceView_container__hQc8u > div.WorkspaceView_layout__E_XAT > nav > div > button")))
+    print("Button found! Now clicking...")
+    button.click()
+    print("Button clicked! Waiting for popup...")
+    
+    # Wait a moment for the popup to appear
+    time.sleep(2)
+    
+    try:
+        # Click "Create a Gaussian splat" button (index 2)
+        buttons = driver.find_elements(By.CSS_SELECTOR, "dialog button")
+        if len(buttons) >= 3:
+            gaussian_button = buttons[2]  # Index 2 is "Create a Gaussian splat"
+            print("Gaussian button found! Clicking...")
+            gaussian_button.click()
+            print("Gaussian button clicked!")
+        else:
+            print(f"Not enough buttons found. Expected at least 3, got {len(buttons)}")
+    except Exception as e:
+        print(f"Error clicking Gaussian button: {e}")
+        print("Let me try to find any buttons in the popup...")
+        # Try to find any buttons in the popup
+        buttons = driver.find_elements(By.CSS_SELECTOR, "dialog button")
+        print(f"Found {len(buttons)} buttons in dialog")
+        for i, btn in enumerate(buttons):
+            try:
+                print(f"Button {i}: {btn.text}")
+            except:
+                print(f"Button {i}: [Could not get text]")
+
 
     # Send the image paths to the file input element
-    file_input = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.NAME, 'image-upload')))
+    file_input = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[aria-label="Upload files"]')))
     file_input.send_keys(files_to_upload)
 
-    # Additional steps like setting model options and naming the model can be added here
-    # Select Option Reduced
-    WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, ".css-1io8q4v:nth-child(1) > .css-nwhneq"))).click()
-    # Select Object Mask
-    WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, ".css-1luq9jd:nth-child(2) .css-1t8bg7a"))).click()
-    # Select Upload
-    WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, ".css-ht7pri"))).click()
-
-    WebDriverWait(driver, 300).until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".css-5d0rkm")))
+   
+     # Wait a moment for the file upload interface to load
+    time.sleep(2)
+    
+    try:
+        # Click "Upload & Process" button
+        upload_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "button.SelectOptions_btn__aM4on")))
+        print("Upload & Process button found! Clicking...")
+        upload_button.click()
+        print("Upload & Process button clicked!")
+    except Exception as e:
+        print(f"Error clicking Upload & Process button: {e}")
+        print("Let me try to find the button by text...")
+        buttons = driver.find_elements(By.TAG_NAME, "button")
+        for i, btn in enumerate(buttons):
+            try:
+                if "Upload" in btn.text or "Process" in btn.text:
+                    print(f"Found upload button: {btn.text}")
+                    btn.click()
+                    print("Upload button clicked by text!")
+                    break
+            except:
+                pass
 def rename_models_to_folder_name(driver, folder_name):
     # Find the input field corresponding to the next 3D model name.
     # Using the explicit wait ensures that we get the next available name input.
@@ -69,13 +107,13 @@ def main(root_folder):
     driver = webdriver.Chrome()
     # Navigate and perform necessary actions on the website
     driver.get("https://poly.cam")
-    WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".css-12ll7o1")))
-    time.sleep(3)
+    #Wait for Enter to continue
+    input("Press Enter to continue...") 
 
     try:
         for folder in subfolders:
             process_folder(driver, folder)
-            rename_models_to_folder_name(driver, os.path.basename(folder))
+            #rename_models_to_folder_name(driver, os.path.basename(folder))
 
     except Exception as e:
         print(f"An error occurred(Nelson Debug): {e}")
